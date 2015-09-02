@@ -1,0 +1,45 @@
+<section class="content">
+  <div class="row">
+    <div class='col-md-6 col-xs-12'>
+      <div class="box box-solid">
+        <div class="box-header with-border">
+          <i class="fa fa-book"></i>
+          <h3 class="box-title">Description</h3>
+        </div><!-- /.box-header -->
+        <div class="box-body">
+          <%= @package.information.detect{|k,v| k[/Description\-en/]}.try(:[], 1) %>
+        </div><!-- /.box-body -->
+      </div>
+
+      <div class="box box-solid">
+        <div class="box-header with-border">
+          <i class="fa fa-gears"></i>
+          <h3 class="box-title">Attributes</h3>
+        </div><!-- /.box-header -->
+        <div class="box-body">
+          <dl class='dl-horizontal'>
+            <dt>Installed Size</dt>
+            <dd><%= @package.information["Installed-Size"] %></dd>
+            <dt>MD5 Sum of .deb</dt>
+            <dd><%= @package.information["MD5sum"] %></dd>
+            <dt>Depends</dt>
+            <dd><%= @package.information["Depends"].split(", ").join("<br />").html_safe rescue "None" %></dd>
+            <dt>Task</dt>
+            <dd><%= @package.information["Task"].split(", ").join("<br />").html_safe rescue "None" %></dd>
+          </dl>
+        </div><!-- /.box-body -->
+      </div>
+    </div>
+    <div class='col-md-6 col-xs-12'>
+      <div class="box box-solid">
+        <div class="box-header with-border">
+          <i class="fa fa-book"></i>
+          <h3 class="box-title">Update Progress</h3>
+        </div><!-- /.box-header -->
+        <div class="box-body" id="package-update-progress" data-package-id="<%= @package.id %>">
+          <%= render "update_status" %>
+        </div><!-- /.box-body -->
+      </div>
+    </div>
+  </div>
+</section>

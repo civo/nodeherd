@@ -1,0 +1,81 @@
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        <div class="box-header">
+          <h3 class="box-title">All nodes</h3>
+          <div class="box-tools">
+            <div class="input-group pull-right">
+              &nbsp;<%= link_to "<i class='fa fa-plus'></i> Add node".html_safe, new_node_path, class: "btn btn-sm btn-primary" %>
+            </div>
+            <div class="input-group pull-right">
+              <%= form_tag nodes_path, method: :get do %>
+              <input type="text" name="search" class="form-control input-sm" style="width: 150px;" placeholder="Search" value='<%= params[:search] %>'/>
+              <div class="input-group-btn">
+                <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
+              </div>
+              <% end %>
+            </div>
+          </div>
+        </div><!-- /.box-header -->
+        <div class="box-body table-responsive no-padding">
+          <table class="table table-hover">
+            <tr>
+              <th>Name</th>
+              <th>Username</th>
+              <th>Cores</th>
+              <th>RAM</th>
+              <th>Disk</th>
+              <th>Security</th>
+              <th>Updates</th>
+              <th>Tags</th>
+              <th>Actions</th>
+            </tr>
+            <% for node in @nodes %>
+            <tr>
+              <td><%= link_to node.name, node_path(node.hostname) %></td>
+              <td><%= node.username %></td>
+              <td><%= node.cpu_cores %></td>
+              <td><%= number_to_human_size node.ram_bytes %></td>
+              <td><%= number_to_human_size node.disk_space_bytes %></td>
+              <td><%= node.package_updates.not_applied.security.count %></td>
+              <td><%= node.package_updates.not_applied.count %></td>
+              <td><%= node.tags.map {|tag| "<span class=\"badge bg-grey\">#{tag}</span>"}.join(" ").html_safe %></td>
+              <td><%= link_to "<i class='fa fa-pencil'></i> Edit".html_safe, edit_node_path(node), class: "btn btn-xs btn-primary" %> <%= link_to "<i class='fa fa-trash-o'></i> Delete".html_safe, node_path(node), method: "delete", data:{confirm: "Are you sure you want to remove this node?"}, class: "btn btn-xs btn-danger" %> </td>
+            </tr>
+            <% end %>
+          </table>
+        </div><!-- /.box-body -->
+        <div class='box-footer'>
+          <div class="box-tools">
+            <ul class="pagination pagination-sm no-margin pull-right">
+              <li><%= link_to "&laquo;".html_safe, nodes_path(search: @search_terms, page: 1) %></li>
+              <% (1..@nodes.total_pages).each do |page| %>
+                <li><%= link_to page, nodes_path(search: @search_terms, page: page) %></li>
+              <% end %>
+              <li><%= link_to "&raquo;".html_safe, nodes_path(search: @search_terms, page: @nodes.total_pages) %></li>
+            </ul>
+          </div>
+        </div>
+      </div><!-- /.box -->
+
+      <div class="box">
+        <div class="box-header">
+          <h3 class="box-title">Automatic Registration</h3>
+        </div>
+        <div class="box-body">
+          <p>To automatically register a node to this Nodeherd you can do the following (the API token in the code is the real one you should use for this instance of Nodeherd).</p>
+          <p>This can be run multiple times, it will use the hostname as a unique key and not create multiple nodes.</p>
+
+          <pre><code>curl -s \
+  -H "X-API-Token: <%= Setting.api_token %>" \
+  <%= register_nodes_url %> \
+  -d "hostname=my.example.com&username=root&proxy=something@proxy.example.com&tags=compute%20physical"</code></pre>
+
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

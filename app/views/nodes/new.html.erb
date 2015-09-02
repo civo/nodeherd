@@ -1,0 +1,21 @@
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        <div class="box-header">
+          <h3 class="box-title">Add node</h3>
+        </div>
+        <div class="box-body">
+          <%= bootstrap_form_for @node, url: "/nodes" do |f| %>
+            <%= f.text_field :name %>
+            <%= f.text_field :hostname, label: "FQDN or IP Address, if different from the name" %>
+            <%= f.text_field :username, label: "If this isn't 'root', then sudo will be used on the machine" %>
+            <%= f.text_field :proxy, help: "If you need to ssh to another machine to get to this one, type it here in username@hostname format" %>
+            <%= f.text_field :tags, help: "Add a whitespace separated list of tags if you like" %>
+            <%= f.submit "Create", class: "btn btn-primary" %>
+          <% end -%>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

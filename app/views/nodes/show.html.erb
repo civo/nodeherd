@@ -1,0 +1,137 @@
+<section class="content">
+  <div class="row">
+    <div class='col-md-6 col-xs-12'>
+      <div class="box box-solid">
+        <div class="box-header with-border">
+          <i class="fa fa-folder-open-o"></i>
+          <h3 class="box-title">General</h3>
+        </div><!-- /.box-header -->
+        <div class="box-body">
+          <dl class='dl-horizontal'>
+            <dt>Registered</dt>
+            <dd><%= @node.created_at.to_s(:long) %></dd>
+            <dt>Last connection</dt>
+            <dd><%= @node.statistics.last.created_at.to_s(:long) rescue "No statistics collected." %></dd>
+            <dt>Distribution</dt>
+            <dd><%= @node.os_release %></dd>
+            <dt>Tags</dt>
+            <dd><%= @node.tags.map {|tag| "<span class=\"badge bg-grey\">#{tag}</span>"}.join(" ").html_safe %></dd>
+            <dd><br /><%= form_tag tag_node_path(@node.hostname) do %>
+              <div class="input-group">
+                <input type='text' class="form-control input-sm" name='tag' placeholder="Add or remove a tag..." style='width: 150px' />
+                <div class="input-group-btn pull-left">
+                  <button class="btn btn-sm btn-default" type='submit'><i class="fa fa-plus"></i> / <i class="fa fa-trash-o"></i></button>
+                </div>
+              </div>
+            <% end -%></dd>
+          </dl>
+        </div><!-- /.box-body -->
+      </div>
+
+      <div class="box box-solid">
+        <div class="box-header with-border">
+          <i class="fa fa-gears"></i>
+          <h3 class="box-title">Specification</h3>
+        </div><!-- /.box-header -->
+        <div class="box-body">
+          <dl class='dl-horizontal'>
+            <% if @node.lshw_information && @node.lshw_information["<?xml"] %>
+              <dt>Product</dt>
+              <dd><%= @node.lshw.vendor %> <%= @node.lshw.product.gsub(" ()", "") %> (S/N: <%= @node.lshw.serial %>)</dd>
+              <dt>CPU</dt>
+              <dd><%= @node.lshw.cpus.first.product.gsub(/\s+/, " ") rescue "Unknown" %></dd>
+              <dt>Storage</dt>
+              <% for hdd in @node.lshw.disks %>
+                <dd><%= number_to_human_size hdd.size %> - <%= hdd.vendor %> <%= hdd.product %></dd>
+              <% end %>
+              <dt>Network</dt>
+              <% for nic in @node.lshw.network_interfaces %>
+                <dd><%= nic.product %></dd>
+              <% end %>
+            <% else %>
+              <dt>Pending Discovery</dt>
+            <% end %>
+          </dl>
+        </div><!-- /.box-body -->
+      </div>
+
+      <div class="box box-solid">
+        <div class="box-header with-border">
+          <i class="fa fa-comments-o"></i>
+          <h3 class="box-title">Comments</h3>
+        </div><!-- /.box-header -->
+        <div class="box-body">
+          <%= form_tag comment_node_path(@node) do %>
+            <div class="input-group">
+              <input type="text" name="comment" placeholder="Type your comment ..." class="form-control">
+              <span class="input-group-btn">
+                <input type='submit' type="button" class="btn btn-primary btn-flat" value="Add">
+              </span>
+            </div>
+          <% end %>
+          <hr />
+          <% for comment in @node.comments.order(created_at: :desc) %>
+            <div class="direct-chat-msg">
+              <div class="direct-chat-info clearfix">
+                <span class="direct-chat-name pull-left"><%= comment.user.name %></span>
+                <% if comment.created_at < 1.year.ago %>
+                  <span class="direct-chat-timestamp pull-right"><%= comment.created_at.strftime("%-d %b %Y %H:%M") %></span>
+                <% else %>
+                  <span class="direct-chat-timestamp pull-right"><%= comment.created_at.strftime("%-d %b %H:%M") %></span>
+                <% end %>
+              </div><!-- /.direct-chat-info -->
+              <img class="direct-chat-img" src="<%= comment.user.gravatar_url(128) %>" alt="<%= comment.user.name %>">
+              <div class="direct-chat-text">
+                <%= comment.comment %>
+              </div><!-- /.direct-chat-text -->
+            </div><!-- /.direct-chat-msg -->
+          <% end %>
+        </div><!-- /.box-body -->
+      </div>
+
+    </div>
+    <div class='col-md-6 col-xs-12'>
+      <ul class="timeline">
+        <% queue_date = nil %>
+        <% for action in @node.actions.order(updated_at: :desc) %>
+          <% if action.updated_at.to_date != queue_date %>
+            <% queue_date = action.updated_at.to_date %>
+            <li class="time-label">
+                <span class="bg-light-blue">
+                  <%= queue_date.strftime("%-d %b. %Y") %>
+                </span>
+            </li>
+          <% end %>
+
+          <li>
+            <%= action.icon %>
+            <div class="timeline-item">
+              <span class="time"><i class="fa fa-clock-o"></i> <%= action.created_at.strftime("%H:%M") %></span>
+                <h3 class="timeline-header <%= "bg-red" unless action.success? || !action.completed? %>"><%= action.title %></h3>
+
+                <% if action.output && action.output.split("\n").length <4 %>
+                  <div class="timeline-body">
+                    <pre><code><%= action.output.gsub("\n", "<br />").html_safe %></code></pre>
+                  </div>
+                <% elsif action.output %>
+                  <div class="timeline-body" data-id='<%= action.id %>'>
+                    <pre><code><%= action.output.split("\n")[0..2].join("<br />").html_safe %></code></pre>
+                  </div>
+
+                  <div class='timeline-footer'>
+                    <a class="btn btn-primary btn-xs action-loader" data-id="<%= action.id %>">Show entire content...</a>
+                  </div>
+                <% else %>
+                  <div class="timeline-body">
+                    This action is still pending...
+                  </div>
+                <% end %>
+
+            </div>
+          </li>
+        <% end %>
+
+      </ul>
+    </div>
+  </div>
+</section>

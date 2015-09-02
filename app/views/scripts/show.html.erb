@@ -1,0 +1,159 @@
+<section class="content">
+  <% if @script.replaced? %>
+    <div class="callout callout-warning">
+      <h4>Old version!</h4>
+      <p>This is an old version of the script, it was replaced by <%= link_to @script.replacement.name, script_path(@script.replacement) %> at <%= @script.replacement.created_at.strftime("%H:%M on %-d %B %Y") %>.</p>
+    </div>
+  <% end %>
+
+  <% if @script.deleted? %>
+    <div class="callout callout-danger">
+      <h4>No longer an active script</h4>
+      <p>This script has been removed and is no longer accessible to edit or run (intended as a safety roadblock), if you really want to re-run it you can create a new script with the same content and re-upload the files.</p>
+    </div>
+  <% end %>
+
+
+  <div class="row">
+    <div class='col-md-6 col-xs-12'>
+      <div class="box box-solid">
+        <div class="box-header with-border">
+          <i class="fa fa-cogs"></i>
+          <h3 class="box-title"><%= @script.name %></h3>
+          <div class="box-tools">
+            <div class="input-group pull-right">
+              <a href='<%= edit_script_path(@script) %>' class="btn btn-sm btn-primary"><i class="fa fa-pencil"></i> Edit</a>
+            </div>
+          </div>
+
+        </div><!-- /.box-header -->
+        <div class="box-body">
+          <pre><code><%= "\#!#{@script.interpreter}\n#{@script.content}" %></code></pre>
+        </div><!-- /.box-body -->
+      </div>
+
+      <div class="box box-solid">
+        <div class="box-header with-border">
+          <i class="fa fa-cloud-download"></i>
+          <h3 class="box-title">File uploads</h3>
+        </div><!-- /.box-header -->
+        <div class="box-body">
+          <dl class='dl-horizontal'>
+            <dt>File 1</dt>
+            <dd><%= @script.file_1.blank? ? "None" : "#{link_to @script.file_1_filename, download_script_path(@script, file: 1)} (#{pluralize(@script.file_1.length, "byte")})".html_safe %></dd>
+            <dt>File 2</dt>
+            <dd><%= @script.file_2.blank? ? "None" : "#{link_to @script.file_2_filename, download_script_path(@script, file: 2)} (#{pluralize(@script.file_2.length, "byte")})".html_safe %></dd>
+            <dt>File 3</dt>
+            <dd><%= @script.file_3.blank? ? "None" : "#{link_to @script.file_3_filename, download_script_path(@script, file: 3)} (#{pluralize(@script.file_3.length, "byte")})".html_safe %></dd>
+            <dt>File 4</dt>
+            <dd><%= @script.file_4.blank? ? "None" : "#{link_to @script.file_4_filename, download_script_path(@script, file: 4)} (#{pluralize(@script.file_4.length, "byte")})".html_safe %></dd>
+            <dt>File 5</dt>
+            <dd><%= @script.file_5.blank? ? "None" : "#{link_to @script.file_5_filename, download_script_path(@script, file: 5)} (#{pluralize(@script.file_5.length, "byte")})".html_safe %></dd>
+          </dl>
+        </div><!-- /.box-body -->
+      </div>
+
+      <div class="box box-solid">
+        <div class="box-header with-border">
+          <i class="fa fa-play-circle-o"></i>
+          <h3 class="box-title">Executions</h3>
+        </div><!-- /.box-header -->
+        <div class="box-body table-responsive no-padding">
+          <table class="table table-hover">
+            <tr>
+              <th>Hostname</th>
+              <th style='text-align: center'>Completed</th>
+              <th style='text-align: center'>Success</th>
+            </tr>
+            <% for action in @actions %>
+            <tr>
+              <td><%= link_to action.node.hostname, action_path(action.id) %></td>
+              <td style='text-align: center'><%= raw action.completed? ? "<i class='fa fa-check text-green'></i>" : "<i class='fa fa-ellipsis-h text-gray'></i>" %></td>
+              <td style='text-align: center'><%= raw action.success? ? "<i class='fa fa-check text-green'></i>" : "<i class='fa fa-close text-red'></i>" unless !action.completed? %></td>
+            </tr>
+            <% end %>
+          </table>
+        </div><!-- /.box-body -->
+        <div class='box-footer'>
+          <div class="box-tools">
+            <ul class="pagination pagination-sm no-margin pull-right">
+              <li><%= link_to "&laquo;".html_safe, script_path(id: @script.id, execution_page: 1) %></li>
+              <% (1..@actions.total_pages).each do |page| %>
+                <li><%= link_to page, script_path(id: @script.id, execution_page: page) %></li>
+              <% end %>
+              <li><%= link_to "&raquo;".html_safe, script_path(id: @script.id, execution_page: @actions.total_pages) %></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class='col-md-6 col-xs-12'>
+      <div class="box">
+        <div class="box-header">
+          <i class='fa fa-cubes'></i>
+          <% if @script.deleted? %>
+            <h3 class="box-title">No nodes available</h3>
+          <% else %>
+            <h3 class="box-title">Nodes to run this script against</h3>
+          <% end -%>
+          <div class="box-tools">
+            <% unless @script.deleted? %>
+              <div class="input-group pull-right">
+                <%= form_tag script_path(@script.id), method: :get do %>
+                <input type="text" name="node_search" class="form-control input-sm" style="width: 150px;" placeholder="Search" value='<%= params[:node_search] %>'/>
+                <div class="input-group-btn">
+                  <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
+                </div>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div><!-- /.box-header -->
+        <% if @script.deleted? %>
+          <div class="box-body">
+            <p>
+              You can't run this script as it's been deleted.
+            </p>
+          </div>
+        <% else %>
+          <%= form_tag execute_script_path(@script.id) do %>
+          <div class="box-body table-responsive no-padding">
+            <table class="table table-hover">
+              <tr>
+                <th><input type='checkbox' id='select_deselect_all' /></th>
+                <th>Hostname</th>
+                <th>Tags</th>
+              </tr>
+              <% if @nodes.any? %>
+                <% for node in @nodes %>
+                <tr>
+                  <td><input type='checkbox' name='nodes[]' value='<%= node.id %>' /></td>
+                  <td><%= link_to node.hostname, node_path(node.hostname) %></td>
+                  <td><%= node.tags.map {|tag| "<span class=\"badge bg-grey\">#{tag}</span>"}.join(" ").html_safe %></td>
+                </tr>
+                <% end %>
+              <% elsif params[:node_search].blank? %>
+                <tr>
+                  <td colspan='3' style='text-align: center'>You must specify a search criteria, you can't globally execute a script</td>
+                </tr>
+              <% else %>
+                <tr>
+                  <td colspan='3' style='text-align: center'>No nodes were found matching your criteria, please try again</td>
+                </tr>
+              <% end %>
+            </table>
+          </div><!-- /.box-body -->
+          <div class='box-footer'>
+            <div class="box-tools pull-right">
+              <button class="btn btn-primary" type="submit" aria-label="Left Align">
+                <span class="fa fa-play-circle-o" aria-hidden="true"></span>
+                Apply
+              </button>
+            </div>
+          </div>
+          <% end -%>
+        <% end -%>
+      </div><!-- /.box -->
+    </div>
+  </div>
+</section>

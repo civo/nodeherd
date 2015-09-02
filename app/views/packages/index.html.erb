@@ -1,0 +1,50 @@
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        <div class="box-header">
+          <h3 class="box-title">Package updates</h3>
+          <div class="box-tools">
+            <div class="input-group pull-right">
+              <%= form_tag upgrades_path, method: :get do %>
+              <input type="text" name="search" class="form-control input-sm" style="width: 150px;" placeholder="Search" value='<%= params[:search] %>'/>
+              <div class="input-group-btn">
+                <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
+              </div>
+              <% end %>
+            </div>
+          </div>
+        </div><!-- /.box-header -->
+        <div class="box-body table-responsive no-padding">
+          <table class="table table-hover">
+            <tr>
+              <th>Name</th>
+              <th>Version</th>
+              <th style='text-align:center'>Security</th>
+              <th style='text-align:center'>Nodes</th>
+            </tr>
+            <% for package in @packages %>
+            <tr>
+              <td><%= link_to package.name, package_path(package.id) %></td>
+              <td><%= package.version %></td>
+              <td align='center'><%= "<i class='fa fa-lock text-red'></i>".html_safe if package.security? %></td>
+              <td align='center'><%= link_to package.package_updates.map(&:node_id).count, package_nodes_path(package.id) %></td>
+            </tr>
+            <% end %>
+          </table>
+        </div><!-- /.box-body -->
+        <div class='box-footer'>
+          <div class="box-tools">
+            <ul class="pagination pagination-sm no-margin pull-right">
+              <li><%= link_to "&laquo;".html_safe, upgrades_path(search: @search_terms, page: 1) %></li>
+              <% (1..@packages.total_pages).each do |page| %>
+                <li><%= link_to page, upgrades_path(search: @search_terms, page: page) %></li>
+              <% end %>
+              <li><%= link_to "&raquo;".html_safe, upgrades_path(search: @search_terms, page: @packages.total_pages) %></li>
+            </ul>
+          </div>
+        </div>
+      </div><!-- /.box -->
+    </div>
+  </div>
+</section>

@@ -1,0 +1,13 @@
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <%= bootstrap_form_for(@user) do |f| %>
+        <%= f.email_field :email %>
+        <%= f.text_field :name %>
+        <%= f.text_field :title %>
+        <%= f.password_field :password %>
+        <%= f.submit "Save" %>
+      <% end %>
+    </div>
+  </div>
+</section>

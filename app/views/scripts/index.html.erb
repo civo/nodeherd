@@ -1,0 +1,43 @@
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        <div class="box-header">
+          <h3 class="box-title">Previous scripts</h3>
+          <div class="box-tools">
+            <div class="input-group pull-right">
+              <a href='<%= new_script_path %>' class="btn btn-sm btn-default"><i class="fa fa-plus"></i> New script</a>
+            </div>
+          </div>
+        </div><!-- /.box-header -->
+        <div class="box-body table-responsive no-padding">
+          <table class="table table-hover">
+            <tr>
+              <th>Name</th>
+              <th>Created</th>
+              <th>Actions</th>
+            </tr>
+            <% for script in @scripts %>
+            <tr>
+              <td><%= link_to script.name, script_path(script.id) %></td>
+              <td><%= script.created_at %></td>
+              <td><%= link_to "Edit", edit_script_path(script.id), class:'btn btn-xs btn-primary' %> <%= link_to "Remove", script_path(script), method: :delete, data:{confirm: "Are you sure you want to remove this script?"}, class:'btn btn-xs btn-danger' %></td>
+            </tr>
+            <% end %>
+          </table>
+        </div><!-- /.box-body -->
+        <div class='box-footer'>
+          <div class="box-tools">
+            <ul class="pagination pagination-sm no-margin pull-right">
+              <li><%= link_to "&laquo;".html_safe, scripts_path(page: 1) %></li>
+              <% (1..@scripts.total_pages).each do |page| %>
+                <li><%= link_to page, scripts_path(page: page) %></li>
+              <% end %>
+              <li><%= link_to "&raquo;".html_safe, scripts_path(page: @scripts.total_pages) %></li>
+            </ul>
+          </div>
+        </div>
+      </div><!-- /.box -->
+    </div>
+  </div>
+</section>

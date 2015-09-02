@@ -1,0 +1,38 @@
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        <div class="box-header">
+          <h3 class="box-title">All nodes</h3>
+        </div><!-- /.box-header -->
+        <div class="box-body table-responsive no-padding">
+          <table class="table table-hover">
+            <tr>
+              <th></th>
+              <th>Node</th>
+              <th>Details</th>
+            </tr>
+            <% for action in @actions %>
+            <tr>
+              <td><%= action.icon("text") %></td>
+              <td><%= link_to action.node.hostname, node_path(action.node.hostname) %></td>
+              <td><%= link_to action.title.gsub(/<.*?>/, ""), action_path(action) %></td>
+            </tr>
+            <% end %>
+          </table>
+        </div><!-- /.box-body -->
+        <div class='box-footer'>
+          <div class="box-tools">
+            <ul class="pagination pagination-sm no-margin pull-right">
+              <li><%= link_to "&laquo;".html_safe, actions_path(page: 1) %></li>
+              <% (1..@actions.total_pages).each do |page| %>
+                <li><%= link_to page, actions_path(page: page) %></li>
+              <% end %>
+              <li><%= link_to "&raquo;".html_safe, actions_path(page: @actions.total_pages) %></li>
+            </ul>
+          </div>
+        </div>
+      </div><!-- /.box -->
+    </div>
+  </div>
+</section>

@@ -1,0 +1,25 @@
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <%= bootstrap_form_for(@script, multipart: true) do |f| %>
+        <h2>Script</h2>
+        <%= f.text_field :name %>
+        <%= f.text_field :interpreter, prepend: "#!" %>
+        <%= f.check_box :sudo, label: "Sudo required?" %>
+        <%= f.text_field :timeout %>
+        <%= f.text_area :content, rows: 15 %>
+        <hr />
+        <h2>File uploads</h2>
+        <p>
+          The following files will be uploaded to the node when the script is run and their filenames will be available with the environment variables NODEHERD_ATTACHMENT_1, NODEHERD_ATTACHMENT_2, etc.  They will be automatically removed after the script has executed.
+        </p>
+        <%= f.file_field :file_1 %>
+        <%= f.file_field :file_2 %>
+        <%= f.file_field :file_3 %>
+        <%= f.file_field :file_4 %>
+        <%= f.file_field :file_5 %>
+        <%= f.submit "Save script", class: "btn btn-primary" %>
+      <% end %>
+    </div>
+  </div>
+</section>

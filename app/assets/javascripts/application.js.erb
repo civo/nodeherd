@@ -1,0 +1,61 @@
+// This is a manifest file that'll be compiled into application, which will include all the files
+// listed below.
+//
+// Any JavaScript/Coffee file within this directory, lib/assets/javascripts, vendor/assets/javascripts,
+// or any plugin's vendor/assets/javascripts directory can be referenced here using a relative path.
+//
+// It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
+// compiled file.
+//
+// Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
+// about supported directives.
+//
+//= require jquery
+//= require jquery_ujs
+//= require jquery-ui.min
+//= require bootstrap-sprockets
+//= require icheck.min
+//= require raphael-min
+//= require morris.min
+//= require jquery.sparkline.min
+//= require jquery-jvectormap-1.2.2.min
+//= require jquery-jvectormap-world-mill-en
+//= require jquery.knob
+//= require moment.min
+//= require daterangepicker
+//= require bootstrap-datepicker
+//= require bootstrap3-wysihtml5.all.min
+//= require jquery.slimscroll.min
+//= require fastclick.min
+//= require app.min
+
+$(function() {
+  $("table input#select_deselect_all").click(function(event) {
+    if(this.checked) { // check select status
+      $(this).closest("table").find("input[type=checkbox]").each(function() {
+        this.checked = true;
+      });
+    } else {
+      $(this).closest("table").find("input[type=checkbox]").each(function() {
+        this.checked = false;
+      });
+    }
+  });
+
+  if ($("#package-update-progress .progress").length > 0) {
+    var intervalId = window.setInterval(function() {
+      $("#package-update-progress").load("/package/update_status?id=" + $("#package-update-progress").data("package-id"), {}, function() {
+        if ($("#package-update-progress .progress").length == 0) {
+          window.clearInterval($("#package-update-progress").data("intervalId"));
+        }
+      });
+    }, 5000);
+    $("#package-update-progress").data("intervalId", intervalId);
+  }
+
+  $(".action-loader").click(function() {
+    var id = $(this).data("id");
+    $(".timeline-body[data-id=" + id + "]").load("/action/" + id + "/output");
+    $(this).remove();
+  });
+});

@@ -1,0 +1,31 @@
+<% if flash[:errors] || flash[:successes] || flash[:notices] %>
+<section class="content-header">
+  <% if flash[:errors] %>
+    <% flash[:errors].each do |error| %>
+    <div class="alert alert-danger alert-dismissable">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <h4><i class="icon fa fa-ban"></i> <%= error['title'] %></h4>
+      <%= error['content'] %>
+    </div>
+    <% end -%>
+  <% end %>
+  <% if flash[:successes] %>
+    <% flash[:successes].each do |success| %>
+    <div class="alert alert-success alert-dismissable">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <h4><i class="icon fa fa-check"></i> <%= success['title'] %></h4>
+      <%= success['content'] %>
+    </div>
+    <% end -%>
+  <% end %>
+  <% if flash[:notices] %>
+    <% flash[:notices].each do |notice| %>
+    <div class="alert alert-info alert-dismissable">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <h4><i class="icon fa fa-info"></i> <%= notice['title'] %></h4>
+      <%= notice['content'] %>
+    </div>
+    <% end -%>
+  <% end %>
+</section>
+<% end %>

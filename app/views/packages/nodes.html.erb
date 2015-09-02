@@ -1,0 +1,47 @@
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        <div class="box-header">
+          <h3 class="box-title">Nodes missing <%= @package.name %> <%= @package.version %></h3>
+          <div class="box-tools">
+            <div class="input-group pull-right">
+              <%= form_tag nodes_path, method: :get do %>
+              <input type="text" name="search" class="form-control input-sm" style="width: 150px;" placeholder="Search" value='<%= params[:search] %>'/>
+              <div class="input-group-btn">
+                <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
+              </div>
+              <% end %>
+            </div>
+          </div>
+        </div><!-- /.box-header -->
+        <%= form_tag package_nodes_path do %>
+        <div class="box-body table-responsive no-padding">
+          <table class="table table-hover">
+            <tr>
+              <th><input type='checkbox' id='select_deselect_all' /></th>
+              <th>Hostname</th>
+              <th>Tags</th>
+            </tr>
+            <% for node in @nodes %>
+            <tr>
+              <td><input type='checkbox' name='nodes[]' value='<%= node.id %>' /></td>
+              <td><%= link_to node.hostname, node_path(node.hostname) %></td>
+              <td><%= node.tags.map {|tag| "<span class=\"badge bg-grey\">#{tag}</span>"}.join(" ").html_safe %></td>
+            </tr>
+            <% end %>
+          </table>
+        </div><!-- /.box-body -->
+        <div class='box-footer'>
+          <div class="box-tools pull-right">
+            <button class="btn btn-primary" type="submit" aria-label="Left Align">
+              <span class="fa fa-cloud-download" aria-hidden="true"></span>
+              Apply
+            </button>
+          </div>
+        </div>
+        <% end -%>
+      </div><!-- /.box -->
+    </div>
+  </div>
+</section>

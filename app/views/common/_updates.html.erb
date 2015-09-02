@@ -1,0 +1,47 @@
+<% if @outstanding_security.keys.count > 0 %>
+  <li class="dropdown notifications-menu">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+      <i class="fa fa-exclamation-triangle"></i>
+      <span class="label label-danger"><%= @outstanding_security.keys.count %></span>
+    </a>
+    <ul class="dropdown-menu">
+      <li class="header">You have <%= @outstanding_security.keys.count %> security <%= "package".pluralize @outstanding_security.keys.count %> out of date</li>
+      <li>
+        <!-- inner menu: contains the actual data -->
+        <ul class="menu">
+          <% @outstanding_security.each do |package, updates| %>
+            <li>
+              <a href='<%= package_path(package.id) %>'>
+                <i class="fa fa-users text-red"></i> <%= pluralize updates.count, "node" %> requires <b><%= package.name %></b> (<%= package.version %>)
+              </a>
+            </li>
+          <% end %>
+        </ul>
+      </li>
+    </ul>
+  </li>
+<% end %>
+
+<% if @outstanding_regular.keys.count > 0 %>
+  <li class="dropdown notifications-menu">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+      <i class="fa fa-bell"></i>
+      <span class="label label-warning"><%= @outstanding_regular.keys.count %></span>
+    </a>
+    <ul class="dropdown-menu">
+      <li class="header">You have <%= @outstanding_regular.keys.count %> regular <%= "package".pluralize @outstanding_regular.keys.count %> out of date</li>
+      <li>
+        <!-- inner menu: contains the actual data -->
+        <ul class="menu">
+          <% @outstanding_regular.each do |package, updates| %>
+            <li>
+              <a href='<%= package_path(package.id) %>'>
+                <i class="fa fa-users text-red"></i> <%= pluralize updates.count, "node" %> requires <b><%= package.name %></b> (<%= package.version %>)
+              </a>
+            </li>
+          <% end %>
+        </ul>
+      </li>
+    </ul>
+  </li>
+<% end -%>

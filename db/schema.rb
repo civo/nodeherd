@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150902101618) do
+ActiveRecord::Schema.define(version: 20160212122331) do
 
   create_table "actions", force: :cascade do |t|
     t.string   "label"
@@ -49,9 +49,9 @@ ActiveRecord::Schema.define(version: 20150902101618) do
     t.string   "os_release"
     t.string   "name"
     t.string   "proxy"
-    t.string   "username",         default: "root"
-    t.integer  "ram_bytes"
-    t.integer  "disk_space_bytes"
+    t.string   "username",                   default: "root"
+    t.integer  "ram_bytes",        limit: 8
+    t.integer  "disk_space_bytes", limit: 8
   end
 
   create_table "package_updates", force: :cascade do |t|

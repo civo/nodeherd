@@ -94,9 +94,9 @@ class Node < ActiveRecord::Base
   def refresh_hardware
     ssh_connection do |ssh|
       self.cpu_cores = ssh.exec!("cat /proc/cpuinfo | grep siblings | tail -1 | cut -d\":\" -f2").strip.to_i rescue 1
-      meminfo = ssh.exec!("free | grep \"Mem:\"").split(/\s+/)
+      meminfo = ssh.exec!("free -b | grep \"Mem:\"").split(/\s+/)
       self.ram_bytes = meminfo[1].to_i # Use meminfo[2] + meminfo[6] for free space
-      diskinfo = ssh.exec!("df | grep -E \"/$\"").split(/\s+/)
+      diskinfo = ssh.exec!("df -B1 | grep -E \"/$\"").split(/\s+/)
       self.disk_space_bytes = diskinfo[1].to_i # Use diskinfo[3] for free space
       self.lshw_information = ssh.exec!("lshw -xml")
       lsb_release = Hash[ssh.exec!("cat /etc/lsb-release").split("\n").map {|line| line.split("=") }]

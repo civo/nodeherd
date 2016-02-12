@@ -44,7 +44,7 @@ class Node < ActiveRecord::Base
   end
 
   def self.search(query, page, per_page = 25)
-    scope = Node.order(hostname: :asc)
+    scope = Node.order(name: :asc)
     if query
       query.split(/\s+/).each do |term|
         if term[":"]
@@ -98,7 +98,7 @@ class Node < ActiveRecord::Base
       self.ram_bytes = meminfo[1].to_i # Use meminfo[2] + meminfo[6] for free space
       diskinfo = ssh.exec!("df -B1 | grep -E \"/$\"").split(/\s+/)
       self.disk_space_bytes = diskinfo[1].to_i # Use diskinfo[3] for free space
-      self.lshw_information = ssh.exec!("lshw -xml")
+      self.lshw_information = ssh.exec!("#{sudo} lshw -xml")
       lsb_release = Hash[ssh.exec!("cat /etc/lsb-release").split("\n").map {|line| line.split("=") }]
       tags = []
       tags << lsb_release["DISTRIB_CODENAME"]

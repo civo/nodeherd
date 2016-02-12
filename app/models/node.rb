@@ -109,9 +109,9 @@ class Node < ActiveRecord::Base
   end
 
   def check_packages
-    Net::SSH.start(hostname, 'root', key_data: Rails.application.config.ssh_key_data) do |ssh|
+    Net::SSH.start(hostname, username, key_data: Rails.application.config.ssh_key_data) do |ssh|
       packages_to_be_upgraded = []
-      security_updates = ssh.exec!("grep security /etc/apt/sources.list > /tmp/apt.security.sources.list; #{sudo} apt-get upgrade -f -oDir::Etc::Sourcelist=/tmp/apt.security.sources.list -s | grep Inst") || ""
+      security_updates = ssh.exec!("#{sudo} grep security /etc/apt/sources.list > /tmp/apt.security.sources.list; #{sudo} apt-get upgrade -f -oDir::Etc::Sourcelist=/tmp/apt.security.sources.list -s | grep Inst") || ""
       security_packages = security_updates.split("\n").map do |security_line|
         if parts = security_line.match(/Inst (\S+) \[(\S+)\] \((\S+)/)
           "#{parts[1]}|#{parts[3]}"

@@ -3,6 +3,7 @@ Rails.application.routes.draw do
 
   match "login" => 'sessions#new', as: "login", via: %i{get post}
   get 'logout' => 'sessions#destroy', as: "logout"
+  get 'stats' => 'stats#index', as: "stats"
 
   constraints(hostname: /[^\/]+/) do
     resources :nodes, param: :hostname do

@@ -6,7 +6,7 @@ class NodesController < ApplicationController
     @breadcrumbs.add(nodes_path, "Nodes", "nodes")
     @page_title = "Nodes"
     @page_subtitle = "A birds-eye view of your farm"
-    @nodes = Node.search(params[:search], params[:page])
+    @nodes = Node.search(params[:search], params[:page]).order(name: :asc)
   end
 
   def show

@@ -128,7 +128,7 @@
                 <% for node in @nodes %>
                 <tr>
                   <td><input type='checkbox' name='nodes[]' value='<%= node.id %>' /></td>
-                  <td><%= link_to node.hostname, node_path(node.hostname) %></td>
+                  <td><%= link_to node.hostname, node_path(node) %></td>
                   <td><%= node.tags.map {|tag| "<span class=\"badge bg-grey\">#{tag}</span>"}.join(" ").html_safe %></td>
                 </tr>
                 <% end %>

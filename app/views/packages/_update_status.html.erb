@@ -9,11 +9,11 @@
 <% for update in @updates %>
   <p>
     <%= if update.action_id && !update.applied?
-      "<i class='fa fa-magic text-orange'></i> <span class='text-orange'>#{update.node.hostname}</text>".html_safe
+      "<i class='fa fa-magic text-orange'></i> <span class='text-orange'>#{update.node.name}</text>".html_safe
     elsif update.applied?
-      "<i class='fa fa-check-circle text-green'></i> <span class='text-green'>#{update.node.hostname}</text>".html_safe
+      "<i class='fa fa-check-circle text-green'></i> <span class='text-green'>#{update.node.name}</text>".html_safe
     elsif !update.action_id && update.node
-      "<i class='fa fa-question text-gray'></i> <span class='text-gray'>#{update.node.hostname}</text> <a href='#{package_nodes_path(id:update.package_id, "nodes[]" => update.node.id)}' class='btn btn-xs btn-primary' data-method='post'>Apply</a>".html_safe
+      "<i class='fa fa-question text-gray'></i> <span class='text-gray'>#{update.node.name}</text> <a href='#{package_nodes_path(id:update.package_id, "nodes[]" => update.node.id)}' class='btn btn-xs btn-primary' data-method='post'>Apply</a>".html_safe
     end %>
     <%=  %>
   </p>

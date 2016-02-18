@@ -33,7 +33,7 @@
             </tr>
             <% for node in @nodes %>
             <tr>
-              <td><%= link_to node.name, node_path(node.hostname) %></td>
+              <td><%= link_to node.name, node_path(node) %></td>
               <td><%= node.username %></td>
               <td><%= node.cpu_cores %></td>
               <td><%= number_to_human_size node.ram_bytes %></td>

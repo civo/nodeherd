@@ -10,11 +10,11 @@ class NodesController < ApplicationController
   end
 
   def show
-    @node = Node.find_by(hostname: params[:hostname])
+    @node = Node.find_by(name: params[:name])
     if @node
       @breadcrumbs.add(nodes_path, "Nodes", "nodes")
-      @breadcrumbs.add(nodes_path, @node.hostname.split(".").first, "nodes")
-      @page_title = @node.hostname
+      @breadcrumbs.add(nodes_path, @node.name.split(".").first, "nodes")
+      @page_title = @node.name
       @page_subtitle = "One poor little node, all by itself..."
     else
       flash_error("Not found", "Could not find a node called #{params[:hostname]}")
@@ -23,25 +23,25 @@ class NodesController < ApplicationController
   end
 
   def comment
-    @node = Node.find_by(hostname: params[:hostname])
+    @node = Node.find_by(name: params[:name])
     @node.comments.create!(comment: params[:comment], user_id: @current_user.id)
-    flash_success("Thank you", "Your comment has been successfully recorded for #{@node.hostname}")
-    redirect_to node_path(@node.hostname)
+    flash_success("Thank you", "Your comment has been successfully recorded for #{@node.name}")
+    redirect_to node_path(@node)
   end
 
   def tag
-    @node = Node.find_by(hostname: params[:hostname])
+    @node = Node.find_by(name: params[:name])
     tags = @node.tags
     if tags.include?(params[:tag])
       tags.delete(params[:tag])
-      flash_success("Removed", "The tag #{params[:tag]} no longer applies to #{@node.hostname}")
+      flash_success("Removed", "The tag #{params[:tag]} no longer applies to #{@node.name}")
     else
       tags += [params[:tag]]
-      flash_success("Removed", "The node #{@node.hostname} is now tagged with #{params[:tag]}")
+      flash_success("Removed", "The node #{@node.name} is now tagged with #{params[:tag]}")
     end
     @node.tags = tags
     @node.save
-    redirect_to node_path(@node.hostname)
+    redirect_to node_path(@node)
   end
 
   def new
@@ -52,8 +52,8 @@ class NodesController < ApplicationController
     params[:node][:hostname] = params[:node][:name] if params[:node][:hostname].blank?
     @node = Node.new(node_params)
     if @node.save
-      flash_success("Created", "The node #{@node.hostname} has been created")
-      redirect_to node_path(@node.hostname)
+      flash_success("Created", "The node #{@node.name} has been created")
+      redirect_to node_path(@node)
     else
       render :new
     end
@@ -67,8 +67,8 @@ class NodesController < ApplicationController
     params[:node][:hostname] = params[:node][:name] if params[:node][:hostname].blank?
     @node = Node.find_by(hostname: params[:hostname])
     if @node.update_attributes(node_params)
-      flash_success("Updated", "The node #{@node.hostname} has been updated")
-      redirect_to node_path(@node.hostname)
+      flash_success("Updated", "The node #{@node.name} has been updated")
+      redirect_to node_path(@node)
     else
       render :edit
     end
@@ -77,10 +77,10 @@ class NodesController < ApplicationController
   def destroy
     @node = Node.find_by(hostname: params[:hostname])
     if @node.destroy
-      flash_success("Removed", "The node #{@node.hostname} has been removed")
+      flash_success("Removed", "The node #{@node.name} has been removed")
       redirect_to nodes_path
     else
-      flash_success("Unable to find", "The node #{@node.hostname} could not be removed as its no longer in Nodeherd")
+      flash_success("Unable to find", "The node #{@node.name} could not be removed as its no longer in Nodeherd")
       redirect_to nodes_path
     end
   end

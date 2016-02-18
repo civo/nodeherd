@@ -20,13 +20,13 @@
           <table class="table table-hover">
             <tr>
               <th><input type='checkbox' id='select_deselect_all' /></th>
-              <th>Hostname</th>
+              <th>Name</th>
               <th>Tags</th>
             </tr>
             <% for node in @nodes %>
             <tr>
               <td><input type='checkbox' name='nodes[]' value='<%= node.id %>' /></td>
-              <td><%= link_to node.hostname, node_path(node.hostname) %></td>
+              <td><%= link_to node.name, node_path(node) %></td>
               <td><%= node.tags.map {|tag| "<span class=\"badge bg-grey\">#{tag}</span>"}.join(" ").html_safe %></td>
             </tr>
             <% end %>

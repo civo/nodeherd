@@ -16,7 +16,7 @@
             <dd><%= @node.os_release %></dd>
             <dt>Tags</dt>
             <dd><%= @node.tags.map {|tag| "<span class=\"badge bg-grey\">#{tag}</span>"}.join(" ").html_safe %></dd>
-            <dd><br /><%= form_tag tag_node_path(@node.hostname) do %>
+            <dd><br /><%= form_tag tag_node_path(@node) do %>
               <div class="input-group">
                 <input type='text' class="form-control input-sm" name='tag' placeholder="Add or remove a tag..." style='width: 150px' />
                 <div class="input-group-btn pull-left">

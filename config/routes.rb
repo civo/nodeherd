@@ -5,8 +5,8 @@ Rails.application.routes.draw do
   get 'logout' => 'sessions#destroy', as: "logout"
   get 'stats' => 'stats#index', as: "stats"
 
-  constraints(hostname: /[^\/]+/) do
-    resources :nodes, param: :hostname do
+  constraints(name: /[^\/]+/) do
+    resources :nodes, param: :name do
       collection do
         post :register
       end

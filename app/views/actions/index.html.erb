@@ -15,7 +15,7 @@
             <% for action in @actions %>
             <tr>
               <td><%= action.icon("text") %></td>
-              <td><%= link_to action.node.hostname, node_path(action.node.hostname) %></td>
+              <td><%= link_to action.node.hostname, node_path(action.node) %></td>
               <td><%= link_to action.title.gsub(/<.*?>/, ""), action_path(action) %></td>
             </tr>
             <% end %>

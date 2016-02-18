@@ -158,6 +158,6 @@ class Node < ActiveRecord::Base
   end
 
   def to_param
-    hostname
+    name
   end
 end

@@ -137,6 +137,8 @@ class Node < ActiveRecord::Base
 
       package_updates.where("package_id NOT IN (?)", packages_to_be_upgraded).destroy_all
     end
+  rescue Errno::ECONNREFUSED
+    puts "Unable to SSH to #{hostname}"
   end
 
   def lshw

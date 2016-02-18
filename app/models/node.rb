@@ -135,7 +135,11 @@ class Node < ActiveRecord::Base
         end
       end
 
-      package_updates.where("package_id NOT IN (?)", packages_to_be_upgraded).destroy_all
+      if packages_to_be_upgraded.size == 0
+        package_updates.destroy_all
+      else
+        package_updates.where("package_id NOT IN (?)", packages_to_be_upgraded).destroy_all
+      end
     end
   rescue Errno::ECONNREFUSED
     puts "Unable to SSH to #{hostname}"

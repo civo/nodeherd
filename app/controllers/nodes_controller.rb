@@ -60,12 +60,12 @@ class NodesController < ApplicationController
   end
 
   def edit
-    @node = Node.find_by(hostname: params[:hostname])
+    @node = Node.find_by(name: params[:name])
   end
 
   def update
     params[:node][:hostname] = params[:node][:name] if params[:node][:hostname].blank?
-    @node = Node.find_by(hostname: params[:hostname])
+    @node = Node.find_by(name: params[:name])
     if @node.update_attributes(node_params)
       flash_success("Updated", "The node #{@node.name} has been updated")
       redirect_to node_path(@node)
@@ -75,7 +75,7 @@ class NodesController < ApplicationController
   end
 
   def destroy
-    @node = Node.find_by(hostname: params[:hostname])
+    @node = Node.find_by(name: params[:name])
     if @node.destroy
       flash_success("Removed", "The node #{@node.name} has been removed")
       redirect_to nodes_path
@@ -88,7 +88,7 @@ class NodesController < ApplicationController
   def register
     params["hostname"] ||= params["name"]
     params["name"] ||= params["hostname"]
-    @node = Node.find_by(hostname: params["hostname"])
+    @node = Node.find_by(name: params["name"])
     if @node
       original_tags = @node.tags
       new_tags = params.delete("tags").split(/\s+/)

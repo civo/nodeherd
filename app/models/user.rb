@@ -6,15 +6,19 @@ class User < ActiveRecord::Base
   validates_presence_of :email
   validates_presence_of :name
 
+  before_save do
+    self.email = self.email.downcase
+  end
+
   def self.hash_password(password, salt)
     Digest::SHA256.hexdigest("#{password}#{salt}")
   end
 
   def self.login(email, password)
     Rails.logger.debug("Logging in with #{email} and #{password}")
-    u = User.find_by(email: email)
-    Rails.logger.debug("Found #{u.inspect}, #{u.password_hash} = #{User.hash_password(password, u.password_salt)} ? #{u.password_hash == User.hash_password(password, u.password_salt)}")
+    u = User.find_by(email: email.downcase)
     if u
+      Rails.logger.debug("Found #{u.inspect}, #{u.password_hash} = #{User.hash_password(password, u.password_salt)} ? #{u.password_hash == User.hash_password(password, u.password_salt)}")
       u = nil unless u.password_hash == User.hash_password(password, u.password_salt)
     end
     u

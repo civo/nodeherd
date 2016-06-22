@@ -75,7 +75,7 @@ class Action < ActiveRecord::Base
     exit_code = 0
     self.output = ""
     node.ssh_connection do |ssh|
-      channel = ssh.exec("#{node.sudo} apt-get update >/dev/null 2>&1; #{node.sudo} apt-get install #{package.name}=#{package.version}") do |ch, success|
+      channel = ssh.exec("#{node.sudo} apt-get install #{package.name}=#{package.version}") do |ch, success|
         channel.on_data do |_, data|
           self.output += data
         end

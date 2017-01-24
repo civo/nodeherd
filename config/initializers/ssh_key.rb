@@ -7,6 +7,6 @@ else
 end
 
 if File.exist?(ssh_key_file)
-  Rails.application.config.ssh_key_file = ssh_key_file
-  Rails.application.config.ssh_key_data = File.read(ssh_key_file)
+  Rails.application.config.x.ssh_key_file = ssh_key_file
+  Rails.application.config.x.ssh_key_data = File.read(ssh_key_file)
 end

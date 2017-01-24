@@ -106,7 +106,7 @@ class Action < ActiveRecord::Base
     if node.proxy
       ssh_options = {proxy: Net::SSH::Proxy::Command.new("ssh -i #{Rails.application.config.ssh_key_file} #{node.proxy} nc %h %p")}
     else
-      ssh_options = {key_data: Rails.application.config.ssh_key_data}
+      ssh_options = {key_data: Rails.application.config.x.ssh_key_data}
     end
 
     uploaded_files = {}

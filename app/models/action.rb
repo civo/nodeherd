@@ -7,7 +7,7 @@ class Action < ActiveRecord::Base
   belongs_to :script
   has_many :package_updates
   scope :completed, ->() { where(completed: true) }
-  scope :not_completed, ->() { where(completed: false).order("RAND() ASC") }
+  scope :not_completed, ->() { where(completed: false).order("RANDOM() ASC") }
   scope :latest, ->() { order(created_at: :desc).limit(1000) }
 
   def self.run_once
